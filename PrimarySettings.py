@@ -27,7 +27,7 @@ GRIDHEIGHT = HEIGHT / SQSIZE
 
 # player settings
 
-playerSpeed = 430  # in second
+playerSpeed = 200  # in second
 enemySpeed = 200
 
 
@@ -35,8 +35,8 @@ PLAYER_IMAGE = 'tank_blue.png'
 ENEMY_IMAGE = 'tank_green.png'
 WALL_IMAGE = 'dirt.png'
 
-RotationSpeedOfPlayer = 240  # degree in second
-RotationSpeedOfEnemy = 120
+RotationSpeedOfPlayer = 120  # degree in second
+RotationSpeedOfEnemy = 240
 
 player_box = pygame.Rect(0, 0, 25, 28)
 enemy_box = pygame.Rect(0, 0, 25, 28)

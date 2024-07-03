@@ -2,6 +2,7 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 import pygame
+from stable_baselines3 import PPO
 from sprites import Player, Bullet, Enemy, Wall
 from PrimarySettings import *
 from main import Game
@@ -90,8 +91,9 @@ class TankTroubleEnv(gym.Env):
         player_action = ['left', 'right', 'up', 'down', 'fire'][action]
         self.game.player.set_action(player_action)
         #akcija za neprijatelja
-        random_action = self.action_space.sample()
-        self.game.enemy.set_action(['left', 'right', 'up', 'down', 'fire'][random_action])
+        model = PPO.load("Enemy")
+        enemy_action,_=model.predict(self._get_obs(for_enemy=True).astype(np.float32))
+        self.game.enemy.set_action(['left', 'right', 'up', 'down', 'fire'][enemy_action])
 
         self.game.update_time()
         self.game.update()
@@ -116,7 +118,7 @@ class TankTroubleEnv(gym.Env):
     def close(self):
         pygame.quit()
 
-    def _get_obs(self):
+    def _get_obs(self,for_enemy=False):
         player_data = [
             self.game.player.position.x/1024,
             self.game.player.position.y/768,
@@ -129,8 +131,10 @@ class TankTroubleEnv(gym.Env):
         ]
         angle_to_enemy = calculate_angle(self.game.player.position, self.game.enemy.position)/360
 
-        observation = np.array(player_data + enemy_data+[angle_to_enemy])
-        observation = np.array(player_data + enemy_data)
+        if for_enemy:
+            observation = np.array(enemy_data + player_data)
+        else:
+            observation = np.array(player_data + enemy_data+[angle_to_enemy])
         return observation
 
     def _get_reward(self,prev_player_position,prev_enemy_position, prev_angle, new_angle,action):

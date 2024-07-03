@@ -52,7 +52,7 @@ if os.path.exists(MODEL_PATH):
         model.save("ppo_tank_trouble_super_training")
 
     else:
-        model = PPO.load("Enemy")
+        model = PPO.load("ppo_tank_trouble")
         for i_episode in range(20):
             observation, _ = env.reset()
             done = False
